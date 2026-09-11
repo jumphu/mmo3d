@@ -7,6 +7,47 @@ Official Implementation of "Revisiting Out-of-Distribution Detection in LiDAR-ba
 
 ![overview](overview.png)
 
+## Project Extension: 3D Perception Research and Engineering Practice
+
+This workspace retains the LiDAR out-of-distribution (OOD) detection
+implementation above and adds a research-oriented engineering study of 3D
+perception for autonomous driving. It is intended for literature review,
+algorithm reproduction, controlled experiments, and engineering analysis; it
+is **not** a validated production or safety-critical perception system.
+
+### Scope of work
+
+- **Literature review and technical scoping.** Reviewed 3D perception and
+  vision-language-model literature for autonomous driving, with emphasis on
+  recognizing unknown objects from LiDAR and using event cameras in dynamic
+  scenes.
+- **LiDAR OOD experiments.** Used the nuScenes pipeline to prepare data,
+  extract features, train the OOD detector, and evaluate module-level method
+  variants. The main entry points are `tools/create_data.py`,
+  `tools/train.py`, and `mmood3d/configs/ood/ood.py`.
+- **Event-stereo reproduction.** Added DSEC-3DOD conversion and dataset
+  support (`tools/dataset_converters/dsec_converter.py` and
+  `mmood3d/datasets/dsec_dataset.py`), together with an event-stereo backbone,
+  geometric plane-sweep/projection layers, semantic-geometric filtering, ROI
+  refinement, and an integrated detector configuration.
+
+### Verification and engineering findings
+
+Focused checks in `scripts/test_backbone.py`,
+`scripts/test_projection_pipeline.py`, `scripts/test_dual_filter.py`, and
+`scripts/test_roi_head.py` exercise the main event-stereo components and
+interfaces. Training logs, loss trends, and data inspection were also used to
+investigate depth-supervision, projection, coordinate-transformation, and
+environment-dependency issues.
+
+The event-stereo work should be understood as a reproduction and debugging
+effort rather than a successful end-to-end 3D detection result. While the
+experimental pipeline and component checks were established, unresolved
+coordinate-frame alignment and geometric assumptions prevented a reliable 3D
+detection outcome. The code and conclusions are therefore useful for studying
+reproduction constraints and framework-integration challenges, not for
+deployment claims.
+
 <!---
 ## Abstract
 LiDAR-based 3D object detection has become an essential part of automated driving due to its ability to localize and classify objects precisely in 3D. However, object detectors face a critical challenge when dealing with unknown foreground objects, particularly those that were not present in their original training data. These out-of-distribution (OOD) objects can lead to misclassifications, posing a significant risk to the safety and reliability of automated vehicles. Currently, LiDAR-based OOD object detection has not been well studied. We address this problem by generating synthetic training data for OOD objects by perturbing known object categories. Our idea is that these synthetic OOD objects produce different responses in the feature map of an object detector compared to in-distribution (ID) objects. We then extract features using a pre-trained and fixed object detector and train a simple multilayer perceptron (MLP) to classify each detection as either ID or OOD. In addition, we propose a new evaluation protocol that allows the use of existing datasets without modifying the point cloud, ensuring a more authentic evaluation of real-world scenarios. The effectiveness of our method is validated through experiments on the newly proposed nuScenes OOD benchmark.
