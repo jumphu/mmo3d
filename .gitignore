@@ -129,6 +129,7 @@ results/
 # Machine-local assistant settings.
 .antigravitycli/
 .claude/
+AGENTS.md
 
 # Research artifacts and the separately versioned reference implementation.
 notes/
